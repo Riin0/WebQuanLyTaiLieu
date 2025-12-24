@@ -33,3 +33,20 @@ npm run preview
 ```
 
 Lưu ý: khi deploy production, bạn cần cấu hình web server/reverse proxy để route `/api` về backend (vì proxy của Vite chỉ dùng cho dev).
+
+## Deploy lên Render (Static Site)
+
+Lỗi kiểu `Couldn't find a package.json file in "/opt/render/project/src"` thường do Render đang build ở **repo root** trong khi `package.json` nằm ở `frontend/`.
+
+Cách làm nhanh:
+
+1) Tạo **Static Site** trên Render
+2) Cấu hình:
+	- **Root Directory**: `frontend`
+	- **Build Command**: `npm install && npm run build`
+	- **Publish Directory**: `dist`
+3) Nếu frontend gọi API bằng đường dẫn `/api/...`, hãy set biến môi trường để trỏ về backend production:
+	- `VITE_API_BASE_URL=https://<your-backend-service>.onrender.com`
+
+Ghi chú:
+- Proxy trong `vite.config.ts` chỉ áp dụng cho dev; production cần `VITE_API_BASE_URL` hoặc cơ chế reverse proxy thực sự.
